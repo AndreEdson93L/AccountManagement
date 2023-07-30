@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/account")
+@RequestMapping("api/v1/account")
 public class AccountController {
 
     private final AccountService accountService;
@@ -25,7 +25,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("create")
     @Operation(summary = "Create a new account.")
     @ApiResponses(value = {
             @ApiResponse(
@@ -38,7 +38,7 @@ public class AccountController {
         return new ResponseEntity<>(accountService.saveAccount(account), HttpStatus.OK);
     }
 
-    @GetMapping("/list")
+    @GetMapping("list")
     @Operation(summary = "List all accounts.")
     @ApiResponses(value = {
             @ApiResponse(
