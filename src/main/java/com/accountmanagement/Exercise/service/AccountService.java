@@ -1,5 +1,7 @@
 package com.accountmanagement.Exercise.service;
 
+import com.accountmanagement.Exercise.dto.AccountCreationDTO;
+import com.accountmanagement.Exercise.mapper.AccountMapper;
 import com.accountmanagement.Exercise.model.Account;
 import com.accountmanagement.Exercise.repository.AccountRepository;
 import org.springframework.stereotype.Service;
@@ -11,15 +13,18 @@ import java.util.List;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-
+    private final AccountMapper accountMapper;
     @Autowired
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
         this.accountRepository = accountRepository;
+        this.accountMapper = accountMapper;
     }
 
-    public Account saveAccount(Account account) {
-        // Here you can add any business logic you need before saving
-        return accountRepository.save(account);
+    //save account, return a dto
+    public AccountCreationDTO saveAccount(AccountCreationDTO accountCreationDTO) {
+        Account account = accountMapper.dtoToAccount(accountCreationDTO);
+        Account savedAccount = accountRepository.save(account);
+        return accountMapper.accountToDto(savedAccount);
     }
 
     public List<Account> getAccounts() {

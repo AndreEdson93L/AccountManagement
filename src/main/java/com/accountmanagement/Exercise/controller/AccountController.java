@@ -1,5 +1,6 @@
 package com.accountmanagement.Exercise.controller;
 
+import com.accountmanagement.Exercise.dto.AccountCreationDTO;
 import com.accountmanagement.Exercise.model.Account;
 import com.accountmanagement.Exercise.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,8 @@ public class AccountController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))}
             )
     })
-    public ResponseEntity<Account> createAccount(@RequestBody Account account) {
-        return new ResponseEntity<>(accountService.saveAccount(account), HttpStatus.OK);
+    public ResponseEntity<AccountCreationDTO> createAccount(@RequestBody AccountCreationDTO accountCreationDTO) {
+        return new ResponseEntity<>(accountService.saveAccount(accountCreationDTO), HttpStatus.OK);
     }
 
     @GetMapping("list")
