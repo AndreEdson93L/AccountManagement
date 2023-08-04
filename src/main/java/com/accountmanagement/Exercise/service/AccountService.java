@@ -10,5 +10,5 @@ public interface AccountService {
     List<Account> getAccounts();
     Optional<Account> getAccount(Long id);
     void deleteAccount(Long id);
-    Account updateAccount(Account account);
+    Account updateAccount(Long id, AccountCreationDTO accountDTO);
 }

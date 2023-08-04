@@ -5,6 +5,7 @@ import com.accountmanagement.Exercise.mapper.AccountMapper;
 import com.accountmanagement.Exercise.model.Account;
 import com.accountmanagement.Exercise.repository.AccountRepository;
 import com.accountmanagement.Exercise.service.AccountService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -46,7 +47,22 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account updateAccount(Account account) {
-        return accountRepository.save(account);
+    public Account updateAccount(Long id, AccountCreationDTO accountDTO) {
+        Optional<Account> existingAccountOpt = accountRepository.findById(id);
+        if(existingAccountOpt.isPresent()){
+            Account existingAccount = existingAccountOpt.get();
+
+            //Update properties of the account
+            existingAccount.setEmail(accountDTO.getEmail());
+            existingAccount.setPassword(accountDTO.getPassword());
+            existingAccount.setNickname(accountDTO.getNickname());
+            existingAccount.setConsent(accountDTO.getConsent());
+            existingAccount.setRole(accountDTO.getRole());
+
+            //Save in the db
+            return accountRepository.save(existingAccount);
+        } else {
+            throw new EntityNotFoundException("Account with id " + id + " not found");
+        }
     }
 }
