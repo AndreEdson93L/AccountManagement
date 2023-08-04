@@ -4,6 +4,7 @@ import com.accountmanagement.Exercise.dto.AccountCreationDTO;
 import com.accountmanagement.Exercise.mapper.AccountMapper;
 import com.accountmanagement.Exercise.model.Account;
 import com.accountmanagement.Exercise.service.implementations.AccountServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/account")
@@ -38,7 +40,7 @@ public class AccountController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))}
             )
     })
-    public ResponseEntity<AccountCreationDTO> createAccount(@RequestBody AccountCreationDTO accountCreationDTO) {
+    public ResponseEntity<AccountCreationDTO> createAccount(@Valid @RequestBody AccountCreationDTO accountCreationDTO) {
         return new ResponseEntity<>(accountService.saveAccount(accountCreationDTO), HttpStatus.OK);
     }
 
@@ -95,9 +97,10 @@ public class AccountController {
                     description = "Account with the given ID not found",
                     content = @Content)
     })
-    public ResponseEntity<AccountCreationDTO> updateAccount(@PathVariable Long id, @RequestBody AccountCreationDTO accountDTO) {
-        if (accountService.getAccount(id).isPresent()) {
-            Account updatedAccount = accountService.updateAccount(accountMapper.dtoToAccount(accountDTO));
+    public ResponseEntity<AccountCreationDTO> updateAccount(@PathVariable Long id, @Valid @RequestBody AccountCreationDTO accountDTO) {
+        Optional<Account> existingAccount = accountService.getAccount(id);
+        if (existingAccount.isPresent()) {
+            Account updatedAccount = accountService.updateAccount(id, accountDTO);
             return new ResponseEntity<>(accountMapper.accountToDto(updatedAccount), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
